@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>明泳吉 · 大模型应用研发作品集</title>
+<meta name="description" content="明泳吉，6 年研发经验，专注大模型应用落地：RAG 知识库、Agent 工具编排、模型路由与推理成本优化。">
+<style>
+:root{
+  --ink:#0f1720; --sub:#5b6675; --line:#e6eaf0; --bg:#f6f8fb;
+  --accent:#0f766e; --accent2:#0e7490; --card:#ffffff; --chip:#eef4f6;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  line-height:1.75;-webkit-font-smoothing:antialiased;}
+a{color:var(--accent);text-decoration:none;}
+a:hover{text-decoration:underline;}
+.wrap{max-width:1040px;margin:0 auto;padding:0 24px;}
+
+/* hero */
+.hero{background:linear-gradient(135deg,#0f766e 0%,#0e7490 55%,#155e75 100%);color:#fff;padding:64px 0 72px;}
+.hero .wrap{display:flex;flex-wrap:wrap;gap:36px;align-items:center;justify-content:space-between;}
+.hero h1{font-size:38px;margin:0 0 10px;letter-spacing:1px;font-weight:700;}
+.hero .role{font-size:15px;opacity:.92;margin-bottom:14px;}
+.hero .tagline{font-size:15px;line-height:1.85;opacity:.95;max-width:640px;margin:0;}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+.pill{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.28);border-radius:999px;
+  padding:5px 14px;font-size:12.5px;}
+.links{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;}
+.btn{display:inline-flex;align-items:center;gap:8px;background:#fff;color:#0e7490;border-radius:8px;
+  padding:10px 18px;font-size:13.5px;font-weight:600;box-shadow:0 6px 18px rgba(0,0,0,.12);}
+.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);box-shadow:none;}
+.avatar{width:132px;height:132px;border-radius:50%;background:rgba(255,255,255,.16);
+  border:2px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;
+  font-size:44px;font-weight:700;letter-spacing:2px;flex:0 0 auto;}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin:-38px auto 0;position:relative;z-index:2;}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;
+  box-shadow:0 8px 24px rgba(15,23,32,.05);}
+.stat b{display:block;font-size:24px;color:var(--accent);letter-spacing:.5px;}
+.stat span{font-size:12.5px;color:var(--sub);}
+
+/* section */
+section{padding:56px 0 8px;}
+h2{font-size:22px;margin:0 0 6px;letter-spacing:.5px;}
+h2::after{content:"";display:block;width:44px;height:3px;background:var(--accent);border-radius:2px;margin-top:10px;}
+.lead{color:var(--sub);font-size:14px;margin:14px 0 26px;max-width:760px;}
+
+/* capability */
+.caps{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+.cap{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;
+  transition:transform .18s ease, box-shadow .18s ease;}
+.cap:hover{transform:translateY(-3px);box-shadow:0 12px 28px rgba(15,23,32,.08);}
+.cap h3{margin:0 0 8px;font-size:15.5px;display:flex;align-items:center;gap:8px;}
+.cap p{margin:0;font-size:13.5px;color:var(--sub);}
+
+/* projects */
+.projects{display:grid;gap:20px;}
+.proj{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:26px 28px;
+  border-left:4px solid var(--accent);transition:transform .18s ease, box-shadow .18s ease;}
+.proj:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(15,23,32,.08);}
+.proj-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px;}
+.proj h3{margin:0;font-size:18px;}
+.proj .when{font-size:12.5px;color:var(--sub);white-space:nowrap;}
+.proj .ctx{font-size:13.5px;color:var(--sub);margin:10px 0 14px;}
+.proj ul{margin:0 0 14px;padding-left:18px;font-size:13.8px;}
+.proj li{margin:5px 0;}
+.proj li b{color:var(--accent);}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:var(--chip);color:#155e75;border-radius:6px;padding:3px 10px;font-size:12px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+.metrics{display:flex;flex-wrap:wrap;gap:18px;margin:2px 0 14px;}
+.metric b{display:block;font-size:18px;color:var(--ink);}
+.metric span{font-size:12px;color:var(--sub);}
+
+/* stack */
+.stackgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.stackcol{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;}
+.stackcol h3{margin:0 0 12px;font-size:14px;color:var(--accent);letter-spacing:.5px;}
+.stackcol .chips .chip{background:#f2f5f8;color:#334155;}
+
+/* timeline */
+.timeline{border-left:2px solid var(--line);margin-left:6px;padding-left:22px;}
+.tl{position:relative;padding-bottom:22px;}
+.tl::before{content:"";position:absolute;left:-30px;top:7px;width:10px;height:10px;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 0 4px #fff;}
+.tl b{font-size:14.5px;}
+.tl .when{font-size:12.5px;color:var(--sub);margin-left:8px;}
+.tl p{margin:4px 0 0;font-size:13.5px;color:var(--sub);}
+
+/* footer */
+footer{margin-top:60px;background:#0f1720;color:#c9d3dd;padding:38px 0;}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;font-size:13px;}
+footer a{color:#7dd3c8;}
+footer .small{font-size:12px;color:#8b98a5;}
+
+@media (max-width:820px){
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .caps,.stackgrid{grid-template-columns:1fr;}
+  .hero h1{font-size:30px;}
+  .avatar{width:96px;height:96px;font-size:32px;}
+}
+@media print{
+  .hero{background:#fff;color:#000;padding:20px 0;}
+  .hero .btn,.fineprint,footer{display:none;}
+  .stat,.cap,.proj,.stackcol{box-shadow:none;}
+  section{padding:20px 0 0;}
+  .proj{page-break-inside:avoid;}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>明泳吉</h1>
+      <div class="role">大模型应用研发 · 6 年研发经验</div>
+      <p class="tagline">
+        把大模型从「能聊天」做到「能办事」：RAG 检索要准、工具调用要稳、推理成本要控、效果要可验证。<br>
+        当前负责物流场景智能体的架构与工程化落地——把中台的查询与操作能力，封装成用户一句话就能办成事的 Agent。
+      </p>
+      <div class="meta">
+        <span class="pill">📍 杭州</span>
+        <span class="pill">🎯 求职：大模型应用研发 / AI 应用开发</span>
+        <span class="pill">🛠 Python · FastAPI · LangGraph</span>
+      </div>
+      <div class="links">
+        <a class="btn" href="https://github.com/mingyongji" target="_blank" rel="noopener">GitHub 主页</a>
+        <a class="btn ghost" href="mailto:13333698381@163.com">邮件联系</a>
+        <a class="btn ghost" href="https://resume-mingyongji-iuoicamv.edgeone.cool" target="_blank" rel="noopener">在线简历</a>
+      </div>
+    </div>
+    <div class="avatar">明</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="stats">
+    <div class="stat"><b>6 年</b><span>研发经验</span></div>
+    <div class="stat"><b>92%</b><span>知识问答准确率（自 76% 提升）</span></div>
+    <div class="stat"><b>95%</b><span>工具调用成功率</span></div>
+    <div class="stat"><b>-72%</b><span>模型体积（蒸馏 + int8）</span></div>
+  </div>
+</div>
+
+<div class="wrap">
+  <section id="capability">
+    <h2>能力方向</h2>
+    <p class="lead">不是"接了 API 调通"，而是把一条链路做稳：检索质量、工具可靠性、成本与延迟、上线后的可验证性。</p>
+    <div class="caps">
+      <div class="cap">
+        <h3>🔍 RAG 与知识库</h3>
+        <p>中文父子块递归切分解决长流程文档断章取义；按业务域拆多集合减少跨域串味；BM25 精确匹配叠加向量召回，再经 reranker 精排，把知识问答准确率从 76% 拉到 92%。</p>
+      </div>
+      <div class="cap">
+        <h3>🧩 Agent 与多步编排</h3>
+        <p>把中台查询与操作能力封装成 12 类原子工具，用 LangGraph 按「意图理解 → 工具规划 → 分步执行 → 结果校验 → 汇总回复」编排，支持分支判断与异常重试，多步调用准确率 90% 以上。</p>
+      </div>
+      <div class="cap">
+        <h3>⚡ 路由与成本优化</h3>
+        <p>「精确匹配 → 知识检索 → 工具执行」三层路由让高频问题 30ms 命中、不进大模型；模型侧用随机森林基线 + FastText 初筛 + BERT 精判，只让歧义样本进入大模型。</p>
+      </div>
+      <div class="cap">
+        <h3>🛡 工程与稳定性</h3>
+        <p>FastAPI + SSE 流式输出；统一超时、重试与熔断降级避免请求悬挂；90 秒任务看门狗兜底；规则与数据 24 小时增量同步，无需重建索引。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <h2>代表项目</h2>
+    <p class="lead">因项目涉及公司业务，源码未公开；以下为业务背景、技术方案与上线效果。</p>
+    <div class="projects">
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3>🚚 吉小智 · 物流运营智能体</h3>
+          <span class="when">2025.05 — 2026.10</span>
+        </div>
+        <p class="ctx">面向整车、零部件、售后备件三条业务链，服务三类用户近 6 万人。此前查数据、走流程要在 OA / WMS / TMS 之间反复切换，规则口径不统一，传统问答只能检索文档、无法直接办事。</p>
+        <div class="metrics">
+          <div class="metric"><b>76% → 92%</b><span>知识问答准确率</span></div>
+          <div class="metric"><b>90%+</b><span>多步工具调用准确率</span></div>
+          <div class="metric"><b>80%</b><span>标准查询自主完成</span></div>
+          <div class="metric"><b>-45%</b><span>跨系统查询量</span></div>
+        </div>
+        <ul>
+          <li><b>知识库与检索：</b>父子块递归切分 + 5 个业务域集合 + BM25 精确匹配 + bge-m3 / bge-reranker 双路召回。</li>
+          <li><b>工具与编排：</b>12 类中台能力封装为原子工具，LangGraph 编排多步任务并支持参数校验与失败重试。</li>
+          <li><b>路由与会话：</b>三层路由（阈值 0.86、命中 30ms）；MySQL 存最近 5 轮对话并叠加任务级记忆，追问无需重报运单号。</li>
+          <li><b>稳定性：</b>90 秒任务看门狗、单步超时重试或兜底、中台规则数据 24 小时增量同步。</li>
+          <li><b>安全：</b>按身份挂载可用工具集、按区域注入数据域参数，C 端仅开放只读操作，权限在工具层统一收口。</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">FastAPI</span><span class="chip">LangGraph</span><span class="chip">Milvus</span>
+          <span class="chip">BM25</span><span class="chip">bge-m3</span><span class="chip">bge-reranker</span>
+          <span class="chip">Redis</span><span class="chip">MySQL</span><span class="chip">SSE</span>
+        </div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3>📦 物流场景大模型智能体应用</h3>
+          <span class="when">2026.05 — 2026.10</span>
+        </div>
+        <p class="ctx">覆盖运单、仓储、结算、异常件、售后等高频业务，替代人工在多个物流系统之间的反复检索与流转；负责 Agent 架构、工具调用网关与 Prompt 工程。</p>
+        <div class="metrics">
+          <div class="metric"><b>95%</b><span>工具调用成功率</span></div>
+          <div class="metric"><b>88%</b><span>端到端任务完成率</span></div>
+          <div class="metric"><b>+42%</b><span>Prompt 指令遵循率</span></div>
+          <div class="metric"><b>-60%</b><span>人工咨询量</span></div>
+        </div>
+        <ul>
+          <li><b>工具调用网关：</b>系统接口统一封装为可调用工具，参数校验 + 超时重试 + 异常熔断降级。</li>
+          <li><b>多步任务编排：</b>LangGraph 实现 ReAct 推理循环与任务规划，支持分支判断与失败重试。</li>
+          <li><b>Prompt 工程：</b>角色 / 任务 / 约束 / 输出四段式 System Prompt + Few-shot，按业务线定制职责与输出规范。</li>
+          <li><b>会话与流式：</b>会话持久化与上下文继承（支持中断恢复），SSE 流式输出让长任务边生成边返回。</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">LangGraph</span><span class="chip">ReAct</span><span class="chip">SSE</span>
+          <span class="chip">Prompt Engineering</span><span class="chip">Function Calling</span>
+        </div>
+      </article>
+
+      <article class="proj">
+        <div class="proj-head">
+          <h3>💬 商评宝 · 电商评论情感与类目归类</h3>
+          <span class="when">2023.05 — 2023.12</span>
+        </div>
+        <p class="ctx">服务淘宝店铺后台两条短文本处理需求：评论做「整体极性 + 质量 / 物流 / 服务 / 性价比 / 外观」五维情感分析，商品标题做 10 个一级类目归类。负责数据标注、模型与全栈实现。</p>
+        <div class="metrics">
+          <div class="metric"><b>92%+ / &lt;100ms</b><span>类目归类</span></div>
+          <div class="metric"><b>88%+ / &lt;200ms</b><span>五维情感 Macro-F1</span></div>
+          <div class="metric"><b>-72%</b><span>模型体积</span></div>
+          <div class="metric"><b>70%</b><span>评论分析替代人工</span></div>
+        </div>
+        <ul>
+          <li><b>数据与标注：</b>内部业务数据清洗出 6 万余条样本，自建标注规范标注至维度级；口语化、谐音错别字、表情混排做扰动增强。</li>
+          <li><b>三层路由：</b>随机森林基线 → FastText 初筛 → BERT 精判，仅歧义样本进入大模型；同一套框架承载两条业务线。</li>
+          <li><b>小样本调优：</b>冻结 embedding 与前 6 层 + 分层学习率 + Focal Loss，冷门类目效果拉起、训练速度提升近一倍。</li>
+          <li><b>成本与服务：</b>知识蒸馏 + int8 量化压缩体积 72%；模型延迟加载与 warmup 解决冷启动；BERT 超时自动降级 FastText。</li>
+          <li><b>可视化：</b>Vue3 测试台支持单条 / 批量 / 文件上传，ECharts 看板输出各维度情感占比与热点负面词。</li>
+        </ul>
+        <div class="chips">
+          <span class="chip">BERT</span><span class="chip">FastText</span><span class="chip">Focal Loss</span>
+          <span class="chip">知识蒸馏</span><span class="chip">int8 量化</span><span class="chip">Flask</span>
+          <span class="chip">Vue3</span><span class="chip">ECharts</span>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <section id="stack">
+    <h2>技术栈</h2>
+    <p class="lead">用得最多、也踩过最多坑的那几样。</p>
+    <div class="stackgrid">
+      <div class="stackcol">
+        <h3>语言 / 框架</h3>
+        <div class="chips">
+          <span class="chip">Python</span><span class="chip">FastAPI</span><span class="chip">Flask</span><span class="chip">Vue3</span>
+        </div>
+      </div>
+      <div class="stackcol">
+        <h3>大模型应用</h3>
+        <div class="chips">
+          <span class="chip">LangGraph</span><span class="chip">LangChain</span><span class="chip">RAG</span>
+          <span class="chip">Function Calling</span><span class="chip">Prompt 工程</span>
+        </div>
+      </div>
+      <div class="stackcol">
+        <h3>模型</h3>
+        <div class="chips">
+          <span class="chip">DeepSeek</span><span class="chip">Qwen</span><span class="chip">BERT</span>
+          <span class="chip">FastText</span><span class="chip">微调 / 蒸馏 / 量化</span>
+        </div>
+      </div>
+      <div class="stackcol">
+        <h3>检索与存储</h3>
+        <div class="chips">
+          <span class="chip">Milvus</span><span class="chip">Chroma</span><span class="chip">BM25</span>
+          <span class="chip">bge-m3</span><span class="chip">bge-reranker</span><span class="chip">MySQL</span><span class="chip">Redis</span>
+        </div>
+      </div>
+      <div class="stackcol">
+        <h3>工程与交付</h3>
+        <div class="chips">
+          <span class="chip">Docker</span><span class="chip">Docker Compose</span><span class="chip">GitLab CI</span>
+          <span class="chip">Jenkins</span><span class="chip">Linux</span><span class="chip">SSE</span>
+        </div>
+      </div>
+      <div class="stackcol">
+        <h3>质量体系</h3>
+        <div class="chips">
+          <span class="chip">自动化评测</span><span class="chip">幻觉率 / 准确率</span>
+          <span class="chip">端到端用例</span><span class="chip">Bad Case 复盘</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="timeline">
+    <h2>经历</h2>
+    <p class="lead">测试开发出身，把"可验证"的习惯带进了大模型应用。</p>
+    <div class="timeline">
+      <div class="tl">
+        <b>杭州瑞联网络有限公司</b><span class="when">2025.06 — 至今</span>
+        <p>大模型应用研发工程师。负责物流场景智能体的 Agent 架构、工具调用网关与 Prompt 工程，主导从 0 到 1 的落地。</p>
+      </div>
+      <div class="tl">
+        <b>杭州博彦信息技术有限公司</b><span class="when">2021.07 — 2025.04</span>
+        <p>测试开发工程师 → 大模型应用研发工程师（2023.05 起专职转岗）。负责商评宝的模型与全栈实现；搭建大模型输出自动化评测体系，并把大模型引入测试提效，团队人均产能 +35%。</p>
+      </div>
+      <div class="tl">
+        <b>测试开发阶段</b><span class="when">2021.07 — 2023.04</span>
+        <p>主导接口自动化从 0 到 1（接口用例覆盖率 20% → 75%）、Web UI / App 自动化框架、GitLab + Jenkins CI/CD；落地测试左移，缺陷逃逸率 15% → 6%，线上事故 -70%。</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <h2>联系</h2>
+    <p class="lead">
+      📧 <a href="mailto:13333698381@163.com">13333698381@163.com</a><br>
+      💼 求职意向：大模型应用研发 / AI 应用开发<br>
+      🌐 在线简历：<a href="https://resume-mingyongji-iuoicamv.edgeone.cool" target="_blank" rel="noopener">resume-mingyongji-iuoicamv.edgeone.cool</a>
+    </p>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 明泳吉 · 大模型应用研发</div>
+    <div class="small">项目源码涉及公司业务，未公开；技术方案可邮件交流。</div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -1,2 +1,19 @@
-# new-repo
-A starter repository for my project
+# 明泳吉 · 大模型应用研发作品集
+
+在线地址：**<https://mingyongji.github.io/new-repo/>**
+
+6 年研发经验，近 3 年专注大模型应用落地：RAG 知识库检索、Agent 工具编排、模型路由与推理成本优化。
+
+## 这里有什么
+
+- **能力方向**：RAG 与知识库 / Agent 与多步编排 / 路由与成本优化 / 工程与稳定性
+- **代表项目**：物流运营智能体、物流场景智能体应用、电商评论情感与类目归类
+- **技术栈**：Python · FastAPI · LangGraph · Milvus · BERT · Docker
+
+## 说明
+
+项目源码涉及公司业务，未公开。技术方案、效果指标与踩坑细节可邮件交流：13333698381@163.com
+
+---
+
+本仓库使用 GitHub Pages 托管，纯静态单文件 `index.html`，无构建、无依赖。
