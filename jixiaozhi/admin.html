@@ -1,0 +1,547 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吉小智 · 质量中心</title>
+<style>
+  :root{
+    --navy:#12263F; --navy-2:#1B3352; --navy-3:#1E3A5F;
+    --brand:#2563EB; --brand-dark:#1D4ED8; --brand-50:#EFF4FF; --brand-100:#D6E4FF;
+    --ink:#111827; --ink-2:#374151; --muted:#6B7280; --muted-2:#9CA3AF;
+    --line:#E5E7EB; --line-soft:#F1F3F5; --bg:#F5F7FA; --white:#fff;
+    --ok:#16A34A; --ok-50:#ECFDF5; --ok-100:#BBF7D0;
+    --warn:#EA580C; --warn-50:#FFF7ED; --warn-100:#FED7AA;
+    --danger:#EF4444; --danger-50:#FEF2F2; --danger-100:#FECACA;
+    --radius:6px; --shadow:0 1px 2px rgba(17,24,39,.04);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei UI","Microsoft YaHei",sans-serif;
+    font-size:13px;line-height:1.6;color:var(--ink);background:var(--bg);
+    -webkit-font-smoothing:antialiased;overflow:hidden;
+  }
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  a{color:inherit;text-decoration:none}
+  .ico{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .num{font-variant-numeric:tabular-nums}
+  .app{display:grid;grid-template-rows:56px 1fr;grid-template-columns:220px 1fr;height:100vh}
+
+  /* ── 顶栏 ── */
+  .topbar{grid-column:1/-1;display:flex;align-items:center;gap:14px;padding:0 18px;background:var(--white);border-bottom:1px solid var(--line);z-index:20}
+  .brand{display:flex;align-items:center;gap:9px}
+  .brand-mark{width:28px;height:28px;border-radius:8px;background:var(--brand);display:grid;place-items:center;color:#fff}
+  .brand-name{font-size:15px;font-weight:600;letter-spacing:.2px}
+  .vline{width:1px;height:16px;background:var(--line)}
+  .crumb{font-size:12px;color:var(--muted)}
+  .crumb b{color:var(--ink-2);font-weight:500}
+  .search{margin-left:auto;width:320px;height:32px;display:flex;align-items:center;gap:8px;padding:0 11px;border:1px solid var(--line);border-radius:var(--radius);background:#FAFBFC;color:var(--muted-2)}
+  .search input{border:0;background:none;outline:none;font:inherit;color:var(--ink);width:100%}
+  .search input::placeholder{color:var(--muted-2)}
+  .tag{padding:1px 7px;border:1px solid var(--line);border-radius:4px;font-size:11px;color:var(--muted);letter-spacing:.3px}
+  .icon-btn{position:relative;width:30px;height:30px;display:grid;place-items:center;border-radius:var(--radius);color:var(--ink-2)}
+  .icon-btn:hover{background:#F3F4F6}
+  .dot{position:absolute;top:6px;right:6px;width:6px;height:6px;border-radius:50%;background:var(--danger);border:1.5px solid #fff}
+  .me{display:flex;align-items:center;gap:9px;padding-left:14px;border-left:1px solid var(--line)}
+  .avatar{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;color:#fff;background:#5B7A9D}
+  .me-name{font-size:12px;font-weight:600;line-height:1.2}
+  .me-role{font-size:11px;color:var(--muted);line-height:1.2}
+
+  /* ── 侧栏 ── */
+  .sidebar{background:var(--navy);color:#C7D4E4;display:flex;flex-direction:column;padding:14px 10px 10px;overflow-y:auto}
+  .sb-brand{display:flex;align-items:center;gap:9px;padding:0 6px 14px}
+  .sb-brand .mark{width:30px;height:30px;border-radius:8px;background:var(--brand);display:grid;place-items:center;color:#fff}
+  .sb-brand .t{font-size:13px;font-weight:600;color:#fff;line-height:1.3}
+  .sb-brand .s{font-size:11px;color:#7E93AC}
+  .sb-group{display:flex;align-items:center;justify-content:space-between;padding:12px 8px 6px;font-size:11px;color:#6E86A3;letter-spacing:.4px}
+  .nav-item{position:relative;display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:var(--radius);color:#C7D4E4;font-size:13px;margin-bottom:2px}
+  .nav-item:hover{background:var(--navy-2)}
+  .nav-item.active{background:var(--navy-3);color:#fff;font-weight:500}
+  .nav-item.active::before{content:"";position:absolute;left:0;top:8px;bottom:8px;width:3px;border-radius:0 2px 2px 0;background:var(--brand)}
+  .nav-item .ico{opacity:.85}
+  .nav-item .badge{margin-left:auto;font-size:11px;padding:0 6px;border-radius:9px;background:var(--danger);color:#fff;line-height:16px}
+  .sb-foot{margin-top:auto;display:flex;align-items:center;gap:9px;padding:12px 8px 4px;border-top:1px solid #1F3552}
+  .sb-foot .avatar{width:26px;height:26px;font-size:11px;background:#2B4A6F}
+  .sb-foot .n{font-size:12px;color:#E5EDF6;line-height:1.3}
+  .sb-foot .r{font-size:11px;color:#7E93AC;line-height:1.3}
+
+  /* ── 主区 ── */
+  .main{overflow-y:auto;padding:18px 22px 26px}
+  .page-head{display:flex;align-items:flex-end;gap:14px;margin-bottom:14px}
+  .page-title{font-size:18px;font-weight:600;letter-spacing:.2px}
+  .page-sub{font-size:12px;color:var(--muted);margin-top:2px}
+  .controls{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .sel{height:30px;display:flex;align-items:center;gap:6px;padding:0 9px;border:1px solid var(--line);border-radius:var(--radius);background:var(--white);font-size:12px;color:var(--ink-2)}
+  .sel select{border:0;background:none;outline:none;font:inherit;color:inherit;cursor:pointer}
+  .btn{height:30px;display:inline-flex;align-items:center;gap:6px;padding:0 11px;border-radius:var(--radius);font-size:12px;font-weight:500;border:1px solid var(--line);background:var(--white);color:var(--ink-2)}
+  .btn:hover{border-color:#CBD5E1;background:#FAFBFC}
+  .btn.primary{background:var(--brand);border-color:var(--brand);color:#fff}
+  .btn.primary:hover{background:var(--brand-dark);border-color:var(--brand-dark)}
+  .btn.sm{height:26px;padding:0 9px}
+
+  .card{background:var(--white);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card-h{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line-soft)}
+  .card-h .t{font-size:13px;font-weight:600}
+  .card-h .s{font-size:11px;color:var(--muted-2)}
+  .card-h .r{margin-left:auto;display:flex;align-items:center;gap:8px}
+
+  /* KPI */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:12px}
+  .kpi{padding:14px 16px}
+  .kpi .k{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .kpi .v{font-size:26px;font-weight:600;letter-spacing:-.4px;margin-top:6px;line-height:1.2}
+  .kpi .d{display:flex;align-items:center;gap:5px;font-size:11px;margin-top:6px}
+  .up{color:var(--ok)} .down{color:var(--ok)} .flat{color:var(--muted)}
+  .d.bad{color:var(--danger)}
+  .kpi .d small{color:var(--muted-2)}
+
+  .grid-2{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:12px;margin-bottom:12px}
+  .chart-wrap{padding:10px 14px 6px}
+  .legend{display:flex;gap:14px;font-size:11px;color:var(--muted)}
+  .legend i{display:inline-block;width:14px;height:2px;border-radius:1px;margin-right:5px;vertical-align:middle}
+
+  /* bars */
+  .bars{padding:12px 14px 16px;display:flex;flex-direction:column;gap:13px}
+  .bar-row{display:grid;grid-template-columns:64px 1fr 38px;align-items:center;gap:10px}
+  .bar-label{font-size:12px;color:var(--ink-2);white-space:nowrap}
+  .bar-track{display:block;height:8px;border-radius:2px;background:var(--line-soft);overflow:hidden}
+  .bar-fill{display:block;height:100%;border-radius:2px;background:var(--brand)}
+  .bar-fill.low{background:var(--warn)}
+  .bar-val{font-size:12px;color:var(--ink-2);text-align:right}
+
+  /* table */
+  table{width:100%;border-collapse:collapse}
+  th{font-size:11px;font-weight:500;color:var(--muted);text-align:left;padding:9px 14px;background:#FAFBFC;border-bottom:1px solid var(--line);white-space:nowrap}
+  td{padding:11px 14px;border-bottom:1px solid var(--line-soft);font-size:12px;color:var(--ink-2);white-space:nowrap}
+  tr.run{cursor:pointer}
+  tr.run:hover td{background:#FAFBFC}
+  tr.run.open td{background:var(--brand-50)}
+  .chev{transition:transform .16s ease;color:var(--muted-2)}
+  tr.run.open .chev{transform:rotate(90deg)}
+  .pill{display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 7px;border-radius:4px;font-size:11px;font-weight:500}
+  .pill.ok{background:var(--ok-50);color:var(--ok);border:1px solid var(--ok-100)}
+  .pill.warn{background:var(--warn-50);color:var(--warn);border:1px solid var(--warn-100)}
+  .pill.bad{background:var(--danger-50);color:var(--danger);border:1px solid var(--danger-100)}
+  .pill.info{background:var(--brand-50);color:var(--brand);border:1px solid var(--brand-100)}
+  .pill.gray{background:#F3F4F6;color:var(--muted);border:1px solid var(--line)}
+  .detail td{background:#FAFBFC;padding:0}
+  .detail-in{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:14px 16px}
+  .d-block .h{font-size:11px;color:var(--muted);margin-bottom:6px}
+  .d-block .row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px dashed var(--line-soft)}
+  .d-block .row:last-child{border-bottom:0}
+
+  /* strips */
+  .strips{display:grid;grid-template-columns:1.9fr 1fr;gap:12px}
+  .strip{display:flex;align-items:center;gap:12px;padding:14px 16px}
+  .strip .ico{color:var(--muted)}
+  .strip .big{font-size:13px;font-weight:600}
+  .strip .sm{font-size:11px;color:var(--muted)}
+  .strip .r{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .link{font-size:12px;color:var(--brand);font-weight:500;display:inline-flex;align-items:center;gap:3px}
+  .link:hover{text-decoration:underline}
+
+  .foot{margin-top:14px;font-size:11px;color:var(--muted-2);text-align:center}
+
+  /* modal */
+  .mask{position:fixed;inset:0;background:rgba(17,24,39,.42);display:none;align-items:center;justify-content:center;z-index:50}
+  .mask.show{display:flex}
+  .modal{width:min(760px,92vw);max-height:82vh;background:#fff;border-radius:10px;box-shadow:0 18px 48px rgba(17,24,39,.22);display:flex;flex-direction:column;overflow:hidden}
+  .modal-h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  .modal-h .t{font-size:14px;font-weight:600}
+  .modal-b{overflow-y:auto;padding:4px 0}
+  .modal-f{padding:10px 16px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:8px}
+  .bc{display:grid;grid-template-columns:64px 1fr 130px 96px;gap:10px;padding:11px 16px;border-bottom:1px solid var(--line-soft);font-size:12px;align-items:center}
+  .bc:hover{background:#FAFBFC}
+  .bc .q{color:var(--ink)}
+  .bc .meta{color:var(--muted);font-size:11px}
+  .bc .tagx{font-size:11px;padding:1px 6px;border-radius:4px;background:#F3F4F6;color:var(--muted);border:1px solid var(--line);white-space:nowrap}
+
+  /* toast */
+  .toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,14px);background:#111827;color:#fff;font-size:12px;padding:9px 14px;border-radius:6px;opacity:0;pointer-events:none;transition:all .2s ease;z-index:60}
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  @media (max-width:1280px){
+    .kpis{grid-template-columns:repeat(2,1fr)}
+    .grid-2{grid-template-columns:1fr}
+    .strips{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-logo" viewBox="0 0 24 24"><path d="M4 7l8-4 8 4v10l-8 4-8-4z"/><path d="M12 3v18"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="M7.5 15.5l4-5 3 3 4.5-6"/></symbol>
+    <symbol id="i-task" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8.5 12l2.5 2.5L16 9"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M5 5.5A2 2 0 0 1 7 3.5h11v17H7a2 2 0 0 0-2 2z"/><path d="M5 19.5A2 2 0 0 1 7 17.5h11"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="M4 20l4-.8L19 8.2 15.8 5 4.8 16z"/><path d="M14 6.8l3.2 3.2"/></symbol>
+    <symbol id="i-bug" viewBox="0 0 24 24"><rect x="7" y="8" width="10" height="11" rx="5"/><path d="M9 8V6.5a3 3 0 0 1 6 0V8"/><path d="M4 12h3M17 12h3M5 17l2.5-1.5M19 17l-2.5-1.5M5 7.5L7.5 9M19 7.5L16.5 9"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v5.5c0 4.2-2.9 7.9-7 9.5-4.1-1.6-7-5.3-7-9.5V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="12" rx="2"/><path d="M9 20h6M12 16.5V20"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6.5 16.5V11a5.5 5.5 0 0 1 11 0v5.5l1.5 2h-14z"/><path d="M10 19.5a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h10M17 7h3M4 12h4M12 12h8M4 17h12M19 17h1"/><circle cx="15.5" cy="7" r="1.6"/><circle cx="9.5" cy="12" r="1.6"/><circle cx="17" cy="17" r="1.6"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></symbol>
+    <symbol id="i-chev-r" viewBox="0 0 24 24"><path d="M9.5 6l6 6-6 6"/></symbol>
+    <symbol id="i-chev-d" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.5l11 6.5-11 6.5z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3.5l9 16H3z"/><path d="M12 10v4M12 17.2v.3"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v10"/><path d="M8 10.5l4 4 4-4"/><path d="M4.5 19.5h15"/></symbol>
+  </defs>
+</svg>
+
+<div class="app">
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark"><svg class="ico"><use href="#i-logo"/></svg></span>
+      <span class="brand-name">吉小智</span>
+    </div>
+    <span class="vline"></span>
+    <span class="crumb">质量中心 / <b>评测概览</b></span>
+    <label class="search">
+      <svg class="ico" style="width:14px;height:14px"><use href="#i-search"/></svg>
+      <input placeholder="搜索评测运行、样本、Badcase">
+    </label>
+    <span class="tag">演示数据</span>
+    <button class="icon-btn" title="通知"><svg class="ico"><use href="#i-bell"/></svg><span class="dot"></span></button>
+    <button class="icon-btn" title="设置"><svg class="ico"><use href="#i-sliders"/></svg></button>
+    <div class="me">
+      <span class="avatar">焦</span>
+      <div>
+        <div class="me-name">焦敏</div>
+        <div class="me-role">质量运营 · AI 应用组</div>
+      </div>
+      <svg class="ico" style="width:14px;height:14px;color:var(--muted-2)"><use href="#i-chev-d"/></svg>
+    </div>
+  </header>
+
+  <!-- 侧栏 -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <span class="mark"><svg class="ico"><use href="#i-logo"/></svg></span>
+      <div><div class="t">吉小智</div><div class="s">质量中心</div></div>
+    </div>
+    <div class="sb-group">质量 <svg class="ico" style="width:13px;height:13px"><use href="#i-chev-d"/></svg></div>
+    <a class="nav-item active" href="#"><svg class="ico"><use href="#i-chart"/></svg>评测概览</a>
+    <a class="nav-item" href="#" data-soon><svg class="ico"><use href="#i-task"/></svg>评测任务</a>
+    <a class="nav-item" href="#" data-soon><svg class="ico"><use href="#i-book"/></svg>知识库</a>
+    <a class="nav-item" href="#" data-soon><svg class="ico"><use href="#i-pen"/></svg>标注工作台</a>
+    <a class="nav-item" href="#" id="navBadcase"><svg class="ico"><use href="#i-bug"/></svg>Badcase 池<span class="badge">6</span></a>
+    <div class="sb-group">系统 <svg class="ico" style="width:13px;height:13px"><use href="#i-chev-d"/></svg></div>
+    <a class="nav-item" href="#" data-soon><svg class="ico"><use href="#i-shield"/></svg>权限配置</a>
+    <a class="nav-item" href="index.html"><svg class="ico"><use href="#i-monitor"/></svg>运营工作台</a>
+    <div class="sb-foot">
+      <span class="avatar">焦</span>
+      <div><div class="n">焦敏</div><div class="r">AI 应用组</div></div>
+    </div>
+  </aside>
+
+  <!-- 主区 -->
+  <main class="main">
+    <div class="page-head">
+      <div>
+        <div class="page-title">LLM 输出质量评测</div>
+        <div class="page-sub">评测集 eval-v1.4 · 480 条分层抽样 · 最近更新 16:02</div>
+      </div>
+      <div class="controls">
+        <label class="sel">
+          <select id="rangeSel">
+            <option value="7">近 7 天</option>
+            <option value="30" selected>近 30 天</option>
+            <option value="90">近 90 天</option>
+          </select>
+        </label>
+        <label class="sel">
+          <select id="dsSel">
+            <option>eval-v1.4</option>
+            <option>eval-v1.3</option>
+            <option>eval-v1.2</option>
+          </select>
+        </label>
+        <button class="btn" data-soon><svg class="ico" style="width:14px;height:14px"><use href="#i-download"/></svg>导出报告</button>
+        <button class="btn primary" id="btnRun"><svg class="ico" style="width:14px;height:14px"><use href="#i-play"/></svg>发起评测</button>
+      </div>
+    </div>
+
+    <!-- KPI -->
+    <section class="kpis">
+      <div class="card kpi">
+        <div class="k">准确率 <span class="pill info" style="height:17px;font-size:10px">严格口径</span></div>
+        <div class="v num" id="k1">92.4%</div>
+        <div class="d up" id="d1">↑ 1.3pp <small>较 eval-v1.3</small></div>
+      </div>
+      <div class="card kpi">
+        <div class="k">幻觉率</div>
+        <div class="v num" id="k2">1.8%</div>
+        <div class="d up" id="d2">↓ 0.6pp <small>较 eval-v1.3</small></div>
+      </div>
+      <div class="card kpi">
+        <div class="k">拒答率 <span class="pill gray" style="height:17px;font-size:10px">双向口径</span></div>
+        <div class="v num" id="k3">6.3%</div>
+        <div class="d flat" id="d3">该拒未拒 0.9% · 不该拒 1.4%</div>
+      </div>
+      <div class="card kpi">
+        <div class="k">P95 延迟</div>
+        <div class="v num" id="k4">2.4s</div>
+        <div class="d down" id="d4">↓ 0.3s <small>较 eval-v1.3</small></div>
+      </div>
+    </section>
+
+    <section class="grid-2">
+      <!-- 趋势 -->
+      <div class="card">
+        <div class="card-h">
+          <span class="t">指标趋势 · 按周</span>
+          <div class="r">
+            <div class="legend"><span><i style="background:var(--brand)"></i>准确率（当前）</span><span><i style="background:#9CA3AF;height:2px;background-image:linear-gradient(90deg,#9CA3AF 50%,transparent 50%);background-size:6px 2px"></i>基线</span></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <svg viewBox="0 0 720 226" width="100%" height="226" role="img" aria-label="准确率按周趋势">
+            <g stroke="#F1F3F5" stroke-width="1">
+              <line x1="40" y1="20" x2="700" y2="20"/>
+              <line x1="40" y1="62.5" x2="700" y2="62.5"/>
+              <line x1="40" y1="105" x2="700" y2="105"/>
+              <line x1="40" y1="147.5" x2="700" y2="147.5"/>
+              <line x1="40" y1="190" x2="700" y2="190"/>
+            </g>
+            <g fill="#9CA3AF" font-size="10" text-anchor="end">
+              <text x="34" y="24">100%</text><text x="34" y="66.5">95%</text>
+              <text x="34" y="109">90%</text><text x="34" y="151.5">85%</text><text x="34" y="194">80%</text>
+            </g>
+            <defs>
+              <linearGradient id="area" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#2563EB" stop-opacity=".14"/>
+                <stop offset="100%" stop-color="#2563EB" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M40,150.9 L172,137.3 L304,116.1 L436,102.5 L568,95.7 L700,84.6 L700,190 L40,190 Z" fill="url(#area)"/>
+            <polyline points="40,150.9 172,148.4 304,144.1 436,138.2 568,132.2 700,128"
+                      fill="none" stroke="#9CA3AF" stroke-width="2" stroke-dasharray="5 5" stroke-linecap="round"/>
+            <polyline points="40,150.9 172,137.3 304,116.1 436,102.5 568,95.7 700,84.6"
+                      fill="none" stroke="#2563EB" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <g fill="#fff" stroke="#2563EB" stroke-width="2">
+              <circle cx="40" cy="150.9" r="3.5"/><circle cx="172" cy="137.3" r="3.5"/>
+              <circle cx="304" cy="116.1" r="3.5"/><circle cx="436" cy="102.5" r="3.5"/>
+              <circle cx="568" cy="95.7" r="3.5"/><circle cx="700" cy="84.6" r="3.5"/>
+            </g>
+            <g font-size="10" fill="#6B7280" text-anchor="middle">
+              <text x="40" y="210">第 20 周</text><text x="172" y="210">第 21 周</text><text x="304" y="210">第 22 周</text>
+              <text x="436" y="210">第 23 周</text><text x="568" y="210">第 24 周</text><text x="700" y="210">第 25 周</text>
+            </g>
+            <g font-size="11" fill="#111827" font-weight="600" text-anchor="middle">
+              <text x="700" y="74">92.4%</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 分意图 -->
+      <div class="card">
+        <div class="card-h"><span class="t">分意图准确率</span><span class="s" style="margin-left:auto">按样本量加权前</span></div>
+        <div class="bars">
+          <div class="bar-row"><span class="bar-label">轨迹查询</span><span class="bar-track"><span class="bar-fill" style="width:96%"></span></span><span class="bar-val num">96%</span></div>
+          <div class="bar-row"><span class="bar-label">运费计算</span><span class="bar-track"><span class="bar-fill" style="width:94%"></span></span><span class="bar-val num">94%</span></div>
+          <div class="bar-row"><span class="bar-label">库存查询</span><span class="bar-track"><span class="bar-fill" style="width:91%"></span></span><span class="bar-val num">91%</span></div>
+          <div class="bar-row"><span class="bar-label">时效查询</span><span class="bar-track"><span class="bar-fill" style="width:89%"></span></span><span class="bar-val num">89%</span></div>
+          <div class="bar-row"><span class="bar-label">工单创建</span><span class="bar-track"><span class="bar-fill" style="width:87%"></span></span><span class="bar-val num">87%</span></div>
+          <div class="bar-row"><span class="bar-label">理赔</span><span class="bar-track"><span class="bar-fill low" style="width:82%"></span></span><span class="bar-val num">82%</span></div>
+        </div>
+        <div style="padding:0 14px 14px;display:flex;align-items:center;gap:6px;font-size:11px;color:var(--muted)">
+          <svg class="ico" style="width:13px;height:13px;color:var(--warn)"><use href="#i-alert"/></svg>
+          理赔低于 85% 门禁，本周新增 9 条失败样本
+        </div>
+      </div>
+    </section>
+
+    <!-- 运行列表 -->
+    <section class="card" style="margin-bottom:12px">
+      <div class="card-h">
+        <span class="t">最近评测运行</span>
+        <div class="r"><span class="s">点击任意行查看指标分解</span></div>
+      </div>
+      <table>
+        <thead>
+          <tr><th style="width:28px"></th><th>运行 ID</th><th>数据集</th><th>样本数</th><th>准确率</th><th>幻觉率</th><th>拒答率</th><th>状态</th><th>耗时</th></tr>
+        </thead>
+        <tbody id="runBody">
+          <tr class="run" data-run="0">
+            <td><svg class="ico chev" style="width:13px;height:13px"><use href="#i-chev-r"/></svg></td>
+            <td class="num">run_20260118_006</td><td>eval-v1.4</td><td class="num">480</td>
+            <td class="num" style="font-weight:600;color:var(--ink)">92.4%</td><td class="num">1.8%</td><td class="num">6.3%</td>
+            <td><span class="pill ok">通过</span></td><td class="num">24:37</td>
+          </tr>
+          <tr class="run" data-run="1">
+            <td><svg class="ico chev" style="width:13px;height:13px"><use href="#i-chev-r"/></svg></td>
+            <td class="num">run_20260117_005</td><td>eval-v1.3</td><td class="num">480</td>
+            <td class="num">91.1%</td><td class="num">2.4%</td><td class="num">6.8%</td>
+            <td><span class="pill ok">通过</span></td><td class="num">22:10</td>
+          </tr>
+          <tr class="run" data-run="2">
+            <td><svg class="ico chev" style="width:13px;height:13px"><use href="#i-chev-r"/></svg></td>
+            <td class="num">run_20260116_004</td><td>eval-v1.3</td><td class="num">480</td>
+            <td class="num">90.3%</td><td class="num">2.7%</td><td class="num">7.5%</td>
+            <td><span class="pill warn">待复核</span></td><td class="num">23:02</td>
+          </tr>
+          <tr class="run" data-run="3">
+            <td><svg class="ico chev" style="width:13px;height:13px"><use href="#i-chev-r"/></svg></td>
+            <td class="num">run_20260115_003</td><td>eval-v1.2</td><td class="num">420</td>
+            <td class="num">88.7%</td><td class="num">3.1%</td><td class="num">9.1%</td>
+            <td><span class="pill bad">已回退</span></td><td class="num">19:44</td>
+          </tr>
+          <tr class="run" data-run="4">
+            <td><svg class="ico chev" style="width:13px;height:13px"><use href="#i-chev-r"/></svg></td>
+            <td class="num">run_20260114_002</td><td>eval-v1.2</td><td class="num">420</td>
+            <td class="num">87.9%</td><td class="num">3.5%</td><td class="num">9.6%</td>
+            <td><span class="pill ok">通过</span></td><td class="num">18:51</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 底部条 -->
+    <section class="strips">
+      <div class="card strip">
+        <svg class="ico" style="width:18px;height:18px"><use href="#i-bug"/></svg>
+        <div>
+          <div class="big">Badcase 池 · 本周新增 37 条</div>
+          <div class="sm">已分类 31 · 待标注 6 · 最大来源「理赔」意图</div>
+        </div>
+        <div class="r">
+          <span class="pill gray num">P0 4</span>
+          <a class="link" id="openBadcase">查看全部 <svg class="ico" style="width:12px;height:12px"><use href="#i-chev-r"/></svg></a>
+        </div>
+      </div>
+      <div class="card strip">
+        <svg class="ico" style="width:18px;height:18px"><use href="#i-shield"/></svg>
+        <div>
+          <div class="big">CI 门禁 · 通过</div>
+          <div class="sm">smoke 80 条 4:52 · 主干 480 条 24:37</div>
+        </div>
+        <div class="r"><span class="pill ok">2pp 基线内</span></div>
+      </div>
+    </section>
+
+    <div class="foot">演示数据 · 指标口径见《设计规范》第 9 节后端契约</div>
+  </main>
+</div>
+
+<!-- Badcase 弹层 -->
+<div class="mask" id="mask">
+  <div class="modal" role="dialog" aria-label="Badcase 池">
+    <div class="modal-h">
+      <span class="t">Badcase 池</span>
+      <span class="pill gray">本周 37 条</span>
+      <button class="icon-btn" id="closeModal" style="margin-left:auto;width:26px;height:26px" title="关闭">✕</button>
+    </div>
+    <div class="modal-b" id="bcList"></div>
+    <div class="modal-f">
+      <button class="btn sm" data-soon>批量分配</button>
+      <button class="btn sm primary" data-soon>加入回归集</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  const $ = (s, r) => (r || document).querySelector(s);
+  const $$ = (s, r) => Array.from((r || document).querySelectorAll(s));
+
+  /* ── toast ── */
+  let tTimer;
+  function toast(msg){
+    const el = $('#toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(tTimer);
+    tTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  /* ── 未开放功能 ── */
+  $$('[data-soon]').forEach(el => el.addEventListener('click', e => {
+    e.preventDefault();
+    toast('演示版未开放该功能');
+  }));
+
+  /* ── 时间范围切换 ── */
+  const RANGES = {
+    '7':  {k1:'92.9%', d1:'↑ 0.5pp <small>较上周</small>', k2:'1.6%', d2:'↓ 0.2pp <small>较上周</small>', k3:'6.0%', d3:'该拒未拒 0.8% · 不该拒 1.1%', k4:'2.3s', d4:'↓ 0.1s <small>较上周</small>'},
+    '30': {k1:'92.4%', d1:'↑ 1.3pp <small>较 eval-v1.3</small>', k2:'1.8%', d2:'↓ 0.6pp <small>较 eval-v1.3</small>', k3:'6.3%', d3:'该拒未拒 0.9% · 不该拒 1.4%', k4:'2.4s', d4:'↓ 0.3s <small>较 eval-v1.3</small>'},
+    '90': {k1:'90.1%', d1:'↑ 2.6pp <small>较上季</small>', k2:'2.2%', d2:'↓ 1.1pp <small>较上季</small>', k3:'7.4%', d3:'该拒未拒 1.2% · 不该拒 1.9%', k4:'2.6s', d4:'↓ 0.5s <small>较上季</small>'}
+  };
+  function setHTML(id, html){ const el = $('#' + id); el.innerHTML = html; }
+  $('#rangeSel').addEventListener('change', e => {
+    const r = RANGES[e.target.value]; if (!r) return;
+    ['k1','k2','k3','k4'].forEach(k => setHTML(k, r[k]));
+    ['d1','d2','d3','d4'].forEach(k => setHTML(k, r[k]));
+    toast('已切换为' + e.target.selectedOptions[0].textContent);
+  });
+  $('#dsSel').addEventListener('change', e => toast('数据集已切换为 ' + e.target.value));
+
+  /* ── 发起评测 ── */
+  let runIdx = 7;
+  $('#btnRun').addEventListener('click', () => {
+    const id = 'run_20260118_' + String(runIdx++).padStart(3, '0');
+    toast('已加入队列 · ' + id + ' · 预计 25 分钟');
+  });
+
+  /* ── 运行行展开 ── */
+  const DETAIL = [
+    {title:'准确率分解', rows:[['严格口径（全字段一致）','92.4%'],['宽松口径（核心字段）','96.1%'],['引用命中率','99.2%'],['格式合规率','100%']]},
+    {title:'分层 · 场景', rows:[['常规场景（60%）','94.8%'],['边界场景（20%）','88.3%'],['对抗样本（10%）','86.0%'],['历史坏例（10%）','90.0%']]},
+    {title:'失败归因 Top', rows:[['理赔规则召回不全','9'],['时效口径歧义','6'],['多意图拆解','4'],['槽位缺失未追问','3']]},
+    {title:'资源与成本', rows:[['tokens in / out','812 / 96'],['单条均耗时','3.1s'],['工具调用次数','1.8'],['回退重识别率','2.1%']]}
+  ];
+  function detailRow(){
+    const tr = document.createElement('tr');
+    tr.className = 'detail';
+    tr.innerHTML = '<td colspan="9"><div class="detail-in">' + DETAIL.map(b =>
+      '<div class="d-block"><div class="h">' + b.title + '</div>' +
+      b.rows.map(r => '<div class="row"><span>' + r[0] + '</span><span class="num">' + r[1] + '</span></div>').join('') +
+      '</div>').join('') + '</div></td>';
+    return tr;
+  }
+  $$('#runBody tr.run').forEach(tr => tr.addEventListener('click', () => {
+    const next = tr.nextElementSibling;
+    if (next && next.classList.contains('detail')) {
+      next.remove(); tr.classList.remove('open'); return;
+    }
+    $$('#runBody tr.run').forEach(o => { o.classList.remove('open'); const n = o.nextElementSibling; if (n && n.classList.contains('detail')) n.remove(); });
+    tr.after(detailRow());
+    tr.classList.add('open');
+  }));
+
+  /* ── Badcase ── */
+  const CASES = [
+    {id:'BC-0412', q:'理赔要几天到账？杭州发的', exp:'理赔流程/时效', act:'咨询（通用）', tag:'规则召回缺失', lv:'P0'},
+    {id:'BC-0409', q:'这票货昨天就该到成都了怎么还没到', exp:'轨迹查询 + 异常上报', act:'轨迹查询', tag:'多意图未拆解', lv:'P1'},
+    {id:'BC-0405', q:'帮我改下收货人电话', exp:'改单（写操作，需确认）', act:'咨询（未追问）', tag:'槽位缺失未追问', lv:'P0'},
+    {id:'BC-0398', q:'运费包含装卸吗', exp:'知识问答（含口径说明）', act:'运费试算', tag:'意图混淆', lv:'P1'},
+    {id:'BC-0391', q:'JSDL20240118001 到哪里了，顺便看下上票', exp:'轨迹查询（多单）', act:'轨迹查询（单票）', tag:'多实体截断', lv:'P2'},
+    {id:'BC-0387', q:'你们家保价怎么算的，保 5 万', exp:'报价（保价）', act:'运费试算（普通）', tag:'工具选错', lv:'P1'}
+  ];
+  function renderCases(){
+    $('#bcList').innerHTML = CASES.map(c =>
+      '<div class="bc">' +
+        '<span class="pill ' + (c.lv === 'P0' ? 'bad' : c.lv === 'P1' ? 'warn' : 'gray') + '">' + c.lv + '</span>' +
+        '<div><div class="q">' + c.q + '</div><div class="meta">期望：' + c.exp + ' ｜ 实际：' + c.act + '</div></div>' +
+        '<span class="tagx">' + c.tag + '</span>' +
+        '<span style="text-align:right"><button class="link" data-soon>加入回归集</button></span>' +
+      '</div>').join('');
+    $$('#bcList [data-soon]').forEach(el => el.addEventListener('click', e => { e.preventDefault(); toast('已加入回归集（演示）'); }));
+  }
+  function openModal(){ renderCases(); $('#mask').classList.add('show'); }
+  function closeModal(){ $('#mask').classList.remove('show'); }
+  $('#openBadcase').addEventListener('click', e => { e.preventDefault(); openModal(); });
+  $('#navBadcase').addEventListener('click', e => { e.preventDefault(); openModal(); });
+  $('#closeModal').addEventListener('click', closeModal);
+  $('#mask').addEventListener('click', e => { if (e.target.id === 'mask') closeModal(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+})();
+</script>
+</body>
+</html>
